@@ -1,0 +1,44 @@
+(rule
+ (targets
+  create_installers.ml
+  discover.ml
+  entry_assembly_manifest.ml
+  entry_install.ml
+  entry_uninstall.ml
+  entry-application.manifest
+  package_setup.ml
+  package_uninstaller.ml
+  runner_admin.ml
+  runner_user.ml)
+ (action
+  (progn
+   (run ml-of-installer-generator))))
+
+(rule
+ (target dune.inc)
+ (deps
+  create_installers.ml
+  discover.ml
+  entry_assembly_manifest.ml
+  entry_install.ml
+  entry_uninstall.ml
+  entry-application.manifest
+  package_setup.ml
+  package_uninstaller.ml
+  runner_admin.ml
+  runner_user.ml)
+ (mode promote)
+ (action
+  (progn
+   (run
+    dune-of-installer-generator
+    --project-root
+    %{project_root}
+    %{target}))))
+
+; warnings should be non-FATAL
+(env
+  (dev
+    (flags (:standard -warn-error -A))))
+
+(include dune.inc)
