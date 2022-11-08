@@ -1,7 +1,7 @@
 (lang dune 2.9)
 
 (name dkml-installer-offline-opam)
-(version 1.0.1)
+(version 2.2.0~alpha~20221104)
 
 (generate_opam_files true)
 
@@ -20,7 +20,7 @@
   (dune                                   (and (>= 2.9.3) (< 2.9.4~)))
   (dune-configurator                      (= 2.9.3))
   (ocaml                                  (= 4.12.1))
-  (dkml-component-offline-opam            (>= 2.2.0~alpha~20221104))
+  (dkml-component-offline-opam            (= 2.2.0~alpha~20221104))
   (dkml-install-installer                 (>= 0.2.0))
   (dkml-package-console                   (>= 0.2.0))
   (crunch                                 (>= 3.2.0))
