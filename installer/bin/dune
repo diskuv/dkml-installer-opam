@@ -1,3 +1,8 @@
+; warnings should be non-FATAL, especially the cmdliner deprecation warnings
+(env
+  (_
+    (flags (:standard -warn-error -A))))
+
 (rule
  (targets
   create_installers.ml
@@ -35,10 +40,5 @@
     --project-root
     %{project_root}
     %{target}))))
-
-; warnings should be non-FATAL, especially the cmdliner deprecation warnings
-(env
-  (_
-    (flags (:standard -warn-error -A))))
 
 (include dune.inc)
