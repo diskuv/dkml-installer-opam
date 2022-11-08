@@ -7,3 +7,11 @@
 (library
  (name private_common)
  (libraries dkml-package-console.common))
+
+(rule
+ (target version.ml)
+ (action
+  (with-stdout-to
+   %{target}
+   (echo
+    "let program_version = {dcooversion|%{version:dkml-component-offline-opam}|dcooversion}"))))
