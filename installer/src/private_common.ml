@@ -34,10 +34,10 @@ let program_info =
       Some "https://github.com/diskuv/dkml-component-opam/blob/main/CHANGES.md";
     help_link_opt = Some "https://opam.ocaml.org/";
     (*
-        14 MB in DKML 1.0.2
-      - "{0} B" -f (Get-ChildItem $env:DiskuvOCamlHome -Recurse | Measure-Object -Property Length -Sum -ErrorAction Stop).Sum
+        45 MB in DKML 1.0.2
+      - "{0} B" -f (Get-ChildItem $env:LOCALAPPDATA\Programs\opam -Recurse | Measure-Object -Property Length -Sum -ErrorAction Stop).Sum
      *)
-    estimated_byte_size_opt = Some 14_000_000L;
+    estimated_byte_size_opt = Some 45_861_428L;
     windows_language_code_id_opt = Some 0x00000409;
     embeds_32bit_uninstaller = true;
     embeds_64bit_uninstaller = true;
