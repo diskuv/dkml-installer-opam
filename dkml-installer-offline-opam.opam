@@ -51,7 +51,7 @@ install: [
     "--program-version"
     version
     "--component"
-    "network-ocamlcompiler"
+    "offline-opam"
 
     # Only Windows, Linux (dockcross manylinux2014) and Darwin Intel which
     # corresponds to the build environments of GitHub workflow setup-dkml.yml.

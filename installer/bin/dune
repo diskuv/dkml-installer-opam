@@ -36,9 +36,9 @@
     %{project_root}
     %{target}))))
 
-; warnings should be non-FATAL
+; warnings should be non-FATAL, especially the cmdliner deprecation warnings
 (env
-  (dev
+  (_
     (flags (:standard -warn-error -A))))
 
 (include dune.inc)
