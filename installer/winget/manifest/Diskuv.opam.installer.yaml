@@ -31,16 +31,16 @@ AppsAndFeaturesEntries:
   # https://github.com/diskuv/dkml-install-api/blob/main/package/console/common/Windows_registry.ml
   - Publisher: Diskuv, Inc.
     DisplayName: Diskuv OCaml
-    DisplayVersion: 2.2.0~alpha~20221104
+    DisplayVersion: 2.2.0~alpha0~20221104
 ReleaseDate: 2022-11-07
 
 Installers:
   - Architecture: x86
-    InstallerUrl: https://github.com/diskuv/dkml-installer-opam/releases/download/v2.2.0-alpha-20221104/setup-opam-windows_x86-2.2.0-alpha-20221104.exe
+    InstallerUrl: https://github.com/diskuv/dkml-installer-opam/releases/download/v2.2.0-alpha0-20221104/setup-opam-windows_x86-2.2.0-alpha0-20221104.exe
     InstallerType: exe
     InstallerSha256: 129641cb609b50feb3fefbec1c435d99c7908d7523a3683bed34b166594628ee    
   - Architecture: x64
-    InstallerUrl: https://github.com/diskuv/dkml-installer-opam/releases/download/v2.2.0-alpha-20221104/setup-opam-windows_x86_64-2.2.0-alpha-20221104.exe
+    InstallerUrl: https://github.com/diskuv/dkml-installer-opam/releases/download/v2.2.0-alpha0-20221104/setup-opam-windows_x86_64-2.2.0-alpha0-20221104.exe
     InstallerType: exe
     InstallerSha256: 129641cb609b50feb3fefbec1c435d99c7908d7523a3683bed34b166594628ee    
 ManifestType: "installer"

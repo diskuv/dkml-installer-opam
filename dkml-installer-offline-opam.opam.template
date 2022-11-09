@@ -58,15 +58,15 @@ extra-source "dl/dkml-runtime-distribution.tar.gz" {
 }
 pin-depends: [
   [
-    "dkml-component-offline-opam.2.2.0~alpha~20221104"
+    "dkml-component-offline-opam.2.2.0~alpha0~20221104"
     "git+https://github.com/diskuv/dkml-component-opam.git"
   ]
   [
-    "dkml-component-staging-opam32.2.2.0~alpha~20221104"
+    "dkml-component-staging-opam32.2.2.0~alpha0~20221104"
     "git+https://github.com/diskuv/dkml-component-opam.git"
   ]
   [
-    "dkml-component-staging-opam64.2.2.0~alpha~20221104"
+    "dkml-component-staging-opam64.2.2.0~alpha0~20221104"
     "git+https://github.com/diskuv/dkml-component-opam.git"
   ]
   [

@@ -17,7 +17,7 @@ let program_name =
     installation_prefix_kebab_lower_case_opt = None;
   }
 
-let program_version = Version.program_version
+let program_version = Opam_to_semver.to_semver Version.program_version
 
 (* From ocaml-crunch defined in ./dune.
 
