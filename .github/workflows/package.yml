@@ -32,8 +32,8 @@ on:
     branches:
       - "main"
     tags:
-      # Any push to a tag that starts with 'v'
       - v*
+      - "[0-9]+.*"
 
 env:
   OPAM_PACKAGE: dkml-installer-offline-opam

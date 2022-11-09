@@ -70,19 +70,19 @@ pin-depends: [
     "git+https://github.com/diskuv/dkml-component-opam.git"
   ]
   [
-    "dkml-install"
+    "dkml-install.0.2.0"
     "git+https://github.com/diskuv/dkml-install-api.git"
   ]
   [
-    "dkml-install-installer"
+    "dkml-install-installer.0.2.0"
     "git+https://github.com/diskuv/dkml-install-api.git"
   ]
   [
-    "dkml-install-runner"
+    "dkml-install-runner.0.2.0"
     "git+https://github.com/diskuv/dkml-install-api.git"
   ]
   [
-    "dkml-package-console"
+    "dkml-package-console.0.2.0"
     "git+https://github.com/diskuv/dkml-install-api.git"
   ]
 ]
