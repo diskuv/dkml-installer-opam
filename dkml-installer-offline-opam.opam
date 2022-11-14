@@ -106,21 +106,17 @@ extra-source "dl/dkml-runtime-distribution.tar.gz" {
     "sha256=ffbdf2624e1fee38be7a218f497be9f660a4758e1ed5abf2ce937e0100e8d004"
   ]
 }
-pin-depends: [
-  [
-    "dkml-component-offline-opam.2.2.0~alpha0~20221104"
-    "git+https://github.com/diskuv/dkml-component-opam.git"
-  ]
-  [
-    "dkml-component-staging-opam32.2.2.0~alpha0~20221104"
-    "git+https://github.com/diskuv/dkml-component-opam.git"
-  ]
-  [
-    "dkml-component-staging-opam64.2.2.0~alpha0~20221104"
-    "git+https://github.com/diskuv/dkml-component-opam.git"
-  ]
-  [
-    "dkml-workflows.1.1.0"
-    "git+https://github.com/diskuv/dkml-workflows.git#v1"
-  ]
-]
+# pin-depends: [
+#   [
+#     "dkml-component-offline-opam.2.2.0~alpha0~20221104"
+#     "git+https://github.com/diskuv/dkml-component-opam.git"
+#   ]
+#   [
+#     "dkml-component-staging-opam32.2.2.0~alpha0~20221104"
+#     "git+https://github.com/diskuv/dkml-component-opam.git"
+#   ]
+#   [
+#     "dkml-component-staging-opam64.2.2.0~alpha0~20221104"
+#     "git+https://github.com/diskuv/dkml-component-opam.git"
+#   ]
+# ]
