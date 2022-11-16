@@ -4,6 +4,12 @@ The files in the `manifest/` directory are published to Microsoft. See
 [Authoring Manifest](https://github.com/microsoft/winget-pkgs/blob/master/AUTHORING_MANIFESTS.md)
 for more details.
 
+## Upgrading
+
+Follow the [Testing](#testing) section first.
+
+Then search for `# BUMP` in the `.yaml` files and edit each line.
+
 ## Testing
 
 ### Prerequisites

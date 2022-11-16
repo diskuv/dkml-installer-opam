@@ -2,7 +2,7 @@
 # yaml-language-server: $schema=https://aka.ms/winget-manifest.defaultLocale.1.2.0.schema.json
 
 PackageIdentifier: Diskuv.opam
-PackageVersion: 1.0.0.0
+PackageVersion: 2.2.0-alpha0-20221104 # BUMP
 PackageLocale: en-US
 Publisher: Diskuv, Inc.
 PublisherUrl: https://www.diskuv.com/
@@ -28,6 +28,6 @@ Tags:
 - open-source
 - package-manager
 - dependency-manager
-ReleaseNotesUrl: https://github.com/diskuv/dkml-installer-opam/releases/tag/2.2.0-alpha-20221104
+ReleaseNotesUrl: https://github.com/diskuv/dkml-installer-opam/releases/tag/2.2.0-alpha0-20221104 # BUMP
 ManifestType: defaultLocale
 ManifestVersion: 1.1.0
