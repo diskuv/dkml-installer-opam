@@ -10,6 +10,49 @@ Follow the [Testing](#testing) section first.
 
 Then search for `# BUMP` in the `.yaml` files and edit each line.
 
+## Submitting
+
+FIRST, go to https://github.com/microsoft/winget-pkgs and press the Fork
+button. You will create a fork in your personal GitHub account.
+
+SECOND, in the `dkml-installer-opam` directory use PowerShell to run:
+
+```powershell
+# Set this to your personal GitHub account name because we'll need to do a
+# GitHub PR. Example: jonahbeckford
+$PERSONAL="todo-what-is-your-personal-github-account-name"
+
+if (Test-Path ..\winget-pkgs) {
+    git -C ..\winget-pkgs fetch
+    git -C ..\winget-pkgs switch master --discard-changes
+    git -C ..\winget-pkgs branch --set-upstream-to=origin/master
+    git -C ..\winget-pkgs reset --hard origin/master
+} else {
+    git -C .. clone https://github.com/microsoft/winget-pkgs
+}
+if (-not (Test-Path ..\winget-pkgs\.git\refs\remotes\personal\HEAD)) {
+    git -C ..\winget-pkgs remote add personal "https://github.com/$PERSONAL/winget-pkgs.git"
+}
+$PKGSEARCH = Get-Content .\installer\winget\manifest\Diskuv.opam.yaml | Select-String -Pattern "^PackageVersion: *([0-9a-z.-]+)" -CaseSensitive
+$PKGVER = $PKGSEARCH.Matches.Groups[1].Value
+if (Test-Path "..\winget-pkgs\.git\refs\heads\opam-$PKGVER" ) {
+    git -C ..\winget-pkgs switch "opam-$PKGVER"
+} else {
+    git -C ..\winget-pkgs switch -c "opam-$PKGVER"
+}
+$MANIFESTDIR = "..\winget-pkgs\manifests\d\Diskuv\opam\$PKGVER"
+if (-not (Test-Path $MANIFESTDIR)) { New-Item -Type Directory $MANIFESTDIR }
+Copy-Item -Path ".\installer\winget\manifest\*.yaml" -Destination $MANIFESTDIR
+git -C ..\winget-pkgs add "manifests\d\Diskuv\opam\$PKGVER"
+
+git -C ..\winget-pkgs commit "manifests\d\Diskuv\opam\$PKGVER" -m "opam $PKGVER"
+
+# Add the -f option to force push onto an existing PR
+git -C ..\winget-pkgs push --set-upstream personal "opam-$PKGVER"
+```
+
+After that you can go to your personal GitHub project and do a PR.
+
 ## Testing
 
 ### Prerequisites
