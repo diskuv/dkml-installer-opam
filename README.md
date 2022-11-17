@@ -6,7 +6,7 @@ The installer is an _offline_ installer, meaning it is fully self-contained.
 However on Windows `opam` by itself is not very useful! The base OCaml compiler
 package, for example, requires a POSIX shell from MSYS2 or Cygwin.
 
-For 2022 and 2023 you should expect to need the `dkml-installer-opam` installer
+For 2022 and 2023 you should expect to need the `dkml-installer-ocaml` installer
 as well to provide the missing pieces.
 
 ## (Pending) Developing
