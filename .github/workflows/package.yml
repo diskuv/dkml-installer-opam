@@ -214,48 +214,6 @@ jobs:
           path: .ci/g
           key: ${{ runner.os }}-gitpin
 
-      # dkml-component-staging-opam32
-
-      - name: Checkout dkml-component-staging-opam32
-        if: ${{ env.DKML_COMPONENT_OFFLINE_OPAM != '@repository@' }}
-        uses: actions/checkout@v3
-        with:
-          repository: diskuv/dkml-component-opam
-          path: .ci/g/dkml-component-staging-opam32
-          ref: ${{ env.DKML_COMPONENT_OFFLINE_OPAM }} # empty is no `ref`, which is default branch
-
-      - name: Pin dkml-component-staging-opam32 to checkout instead of Opam repository
-        if: ${{ env.DKML_COMPONENT_OFFLINE_OPAM != '@repository@' }}
-        run: opamrun pin add --yes --no-action dkml-component-staging-opam32 .ci/g/dkml-component-staging-opam32
-
-      # dkml-component-staging-opam64
-
-      - name: Checkout dkml-component-staging-opam64
-        if: ${{ env.DKML_COMPONENT_OFFLINE_OPAM != '@repository@' }}
-        uses: actions/checkout@v3
-        with:
-          repository: diskuv/dkml-component-opam
-          path: .ci/g/dkml-component-staging-opam64
-          ref: ${{ env.DKML_COMPONENT_OFFLINE_OPAM }} # empty is no `ref`, which is default branch
-
-      - name: Pin dkml-component-staging-opam64 to checkout instead of Opam repository
-        if: ${{ env.DKML_COMPONENT_OFFLINE_OPAM != '@repository@' }}
-        run: opamrun pin add --yes --no-action dkml-component-staging-opam64 .ci/g/dkml-component-staging-opam64
-
-      # dkml-component-offline-opam
-
-      - name: Checkout dkml-component-offline-opam
-        if: ${{ env.DKML_COMPONENT_OFFLINE_OPAM != '@repository@' }}
-        uses: actions/checkout@v3
-        with:
-          repository: diskuv/dkml-component-opam
-          path: .ci/g/dkml-component-offline-opam
-          ref: ${{ env.DKML_COMPONENT_OFFLINE_OPAM }} # empty is no `ref`, which is default branch
-
-      - name: Pin dkml-component-offline-opam to checkout instead of Opam repository
-        if: ${{ env.DKML_COMPONENT_OFFLINE_OPAM != '@repository@' }}
-        run: opamrun pin add --yes --no-action dkml-component-offline-opam .ci/g/dkml-component-offline-opam
-
       # version pins
       - name: Pins for packages to work on all OSes including Windows
         run: |
