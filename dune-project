@@ -34,5 +34,5 @@ sufficient to be a semver version.
   (dkml-component-offline-opam            (= 2.2.0~alpha0~20221104))
   (dkml-install-installer                 (>= 0.3.0))
   (dkml-package-console                   (>= 0.2.0))
-  (crunch                                 (>= 3.2.0))
+  (crunch                                 (>= 3.3.1))
   (alcotest                               (and (>= 1.4.0) :with-test))))
