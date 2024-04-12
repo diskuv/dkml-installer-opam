@@ -18,45 +18,28 @@ on:
           - "no-tests"
           - "no-direct-tests"
           - "no-vagrant-tests"
-      dkml-compiler:
+      DISKUV_OPAM_REPOSITORY:
+        description: The tag for https://github.com/diskuv/diskuv-opam-repository.git. Use "main" to get the latest diskuv repository
+        type: string
+      DKML_COMPILER:
         type: string
         description: "Git branch, tag or commit for dkml-base-compiler"
-        required: false
-        default: "" # "@repository@" = Opam ; "" = latest from default branch of git clone
-      dkml-component-opam:
+      DKML_COMPONENT_OPAM:
         type: string
         description: "Git branch, tag or commit for dkml-component-*-opam"
-        required: false
-        default: "" # "@repository@" = Opam ; "" = latest from default branch of git clone
   push:
     branches:
       - "main"
+      - "eval-*"
     tags:
       - v*
       - "[0-9]+.*"
 
-env:
-  OPAM_PACKAGE: dkml-installer-offline-opam
-  PROGRAM_NAME_KEBAB: opam
-  #=== ERROR while compiling alcotest.1.5.0 =====================================#
-  # context              2.0.10 | win32/x86_64 |  | https://opam.ocaml.org#173f1aaf
-  # ...
-  #           cl src/alcotest/alcotest_stubs.obj (exit 2)
-  # (cd _build/default/src/alcotest && "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Tools\MSVC\14.25.28610\bin\HostX64\x64\cl.exe" -nologo -O2 -Gy- -MD -D_CRT_SECURE_NO_DEPRECATE -nologo -O2 -Gy- -MD -I D:/.opam/dkml/lib/ocaml -I D:\.opam\dkml\lib\astring -I D:\.opam\dkml\lib\fmt -I ../alcotest-engine /Foalcotest_stubs.obj -c alcotest_stubs.c)
-  # alcotest_stubs.c
-  # alcotest_stubs.c(4): fatal error C1083: Cannot open include file: 'unistd.h': No such file or directory
-  PIN_ALCOTEST: 1.4.0
+env:  
+  DISKUV_OPAM_REPOSITORY: ${{ github.event.inputs.DISKUV_OPAM_REPOSITORY }}
+  DKML_COMPILER: ${{ github.event.inputs.DKML_COMPILER }}
 
 jobs:
-  setup-dkml:
-    # Use `dkml-workflows` or `dkml-workflows-prerelease`
-    #uses: "diskuv/dkml-workflows/.github/workflows/setup-dkml.yml@v0"
-    uses: "diskuv/dkml-workflows-prerelease/.github/workflows/setup-dkml.yml@v0"
-
-    with:
-      ocaml-compiler: 4.12.1
-      dkml-compiler: ${{ github.event.inputs.dkml-compiler }}
-
   release-notes:
     runs-on: ubuntu-latest
     if: startsWith(github.ref, 'refs/tags/')
@@ -108,168 +91,112 @@ jobs:
           path: notes.md
 
   build:
-    timeout-minutes: 90 # 1.5 hours
-
-    # Wait until `setup-dkml` is finished
-    needs: setup-dkml
-
-    # Five (5) build environments will be available. You can include
-    # all of them or a subset of them.
     strategy:
-      fail-fast: false
       matrix:
-        include:
-          - os: windows-2019
-            abi-pattern: win32-windows_x86
-            dkml-host-abi: windows_x86
-            opam-root: D:/.opam
-            default_shell: msys2 {0}
-            msys2_system: MINGW32
-            msys2_packages: mingw-w64-i686-pkg-config
-          - os: windows-2019
-            abi-pattern: win32-windows_x86_64
-            dkml-host-abi: windows_x86_64
-            opam-root: D:/.opam
-            default_shell: msys2 {0}
-            msys2_system: CLANG64
-            msys2_packages: mingw-w64-clang-x86_64-pkg-config
-          - os: macos-latest
-            abi-pattern: macos-darwin_all
-            dkml-host-abi: darwin_x86_64
-            opam-root: /Users/runner/.opam
-            default_shell: sh
-          - os: ubuntu-latest
-            abi-pattern: manylinux2014-linux_x86
-            dkml-host-abi: linux_x86
-            opam-root: .ci/opamroot
-            default_shell: sh
-          - os: ubuntu-latest
-            abi-pattern: manylinux2014-linux_x86_64
-            dkml-host-abi: linux_x86_64
-            opam-root: .ci/opamroot
-            default_shell: sh
+        include: # 
+          - gh_os: windows-2019
+            abi_pattern: win32-windows_x86
+            dkml_host_abi: windows_x86
+            bits: "32"
+          - gh_os: windows-2019
+            abi_pattern: win32-windows_x86_64
+            dkml_host_abi: windows_x86_64
+            bits: "64"
+          - gh_os: ubuntu-latest
+            abi_pattern: manylinux2014-linux_x86
+            dkml_host_abi: linux_x86
+            bits: "32"
+          - gh_os: ubuntu-latest
+            abi_pattern: manylinux2014-linux_x86_64
+            dkml_host_abi: linux_x86_64
+            bits: "64"
+          - gh_os: macos-latest
+            abi_pattern: macos-darwin_all
+            dkml_host_abi: darwin_x86_64
+            bits: "64"
 
-    runs-on: ${{ matrix.os }}
-    name: build / ${{ matrix.abi-pattern }}
-
-    # Use a Unix shell by default, even on Windows
-    defaults:
-      run:
-        shell: ${{ matrix.default_shell }}
-
-    env:
-      # When non-empty, instead of building the standard components from the
-      # central Opam repository, use the github/gitlab development repositories
-      # directly.
-      DKML_COMPONENT_OFFLINE_OPAM: "${{ github.event.inputs.dkml-component-opam }}"
-      DKML_COMPONENT_XX_CONSOLE: ""
-
-      # Remove warnings
-      HOMEBREW_NO_INSTALL_CLEANUP: 1
+    runs-on: ${{ matrix.gh_os }}
+    name: build / ${{ matrix.abi_pattern }}
 
     steps:
-      # BOILERPLATE START: setup-dkml
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Install MSYS2 to provide Unix shell (Windows only)
-        if: startsWith(matrix.dkml-host-abi, 'windows')
-        uses: msys2/setup-msys2@v2
-        with:
-          msystem: ${{ matrix.msys2_system }}
-          update: true
-          install: >-
-            ${{ matrix.msys2_packages }}
-            wget
-            make
-            rsync
-            diffutils
-            patch
-            unzip
-            git
-            tar
-
-      - name: Download setup-dkml artifacts
-        uses: actions/download-artifact@v3
-        with:
-          path: .ci/dist
-
-      - name: Import build environments from setup-dkml
-        run: |
-          ${{ needs.setup-dkml.outputs.import_func }}
-          import ${{ matrix.abi-pattern }}
-
-      - name: Cache Opam downloads by host
+      - name: Cache DkML compilers code
         uses: actions/cache@v3
+        id: cache-dkml-compilers
         with:
-          path: ${{ matrix.opam-root }}/download-cache
-          key: ${{ matrix.dkml-host-abi }}
-      # BOILERPLATE END: setup-dkml
+          path: .ci/dkml-compilers
+          key: ${{ runner.os }}
 
-      # The action/checkout steps used for pinning will re-use existing Git objects
-      # because of caching
-      - name: Cache Git checkouts of Opam pins by OS
-        uses: actions/cache@v3
+      - name: Checkout DkML compilers code
+        if: steps.cache-dkml-compilers.outputs.cache-hit != 'true'
+        # For help: ./dk dkml.workflow.compilers HELP
+        run: ./dk dkml.workflow.compilers CI GitHub
+
+      # The .ci/dkml-compilers "pre" actions will create the environment variables:
+      #   opam_root, exe_ext, dkml_host_abi, abi_pattern (and many more)
+      # 
+      - name: Setup DkML compilers on a Windows host
+        if: startsWith(matrix.dkml_host_abi, 'windows_')
+        uses: ./.ci/dkml-compilers/gh-windows/pre
         with:
-          path: .ci/g
-          key: ${{ runner.os }}-gitpin
+          DKML_COMPILER: ${{ env.DKML_COMPILER }}
+          CACHE_PREFIX: ${{ env.CACHE_PREFIX }}
+          DISKUV_OPAM_REPOSITORY: ${{ env.DISKUV_OPAM_REPOSITORY }}
+      - name: Setup DkML compilers on a Linux host
+        if: startsWith(matrix.dkml_host_abi, 'linux_')
+        uses: ./.ci/dkml-compilers/gh-linux/pre
+        with:
+          DKML_COMPILER: ${{ env.DKML_COMPILER }}
+          CACHE_PREFIX: ${{ env.CACHE_PREFIX }}
+          DISKUV_OPAM_REPOSITORY: ${{ env.DISKUV_OPAM_REPOSITORY }}
+      - name: Setup DkML compilers on a Darwin host
+        if: startsWith(matrix.dkml_host_abi, 'darwin_')
+        uses: ./.ci/dkml-compilers/gh-darwin/pre
+        with:
+          DKML_COMPILER: ${{ env.DKML_COMPILER }}
+          CACHE_PREFIX: ${{ env.CACHE_PREFIX }}
+          DISKUV_OPAM_REPOSITORY: ${{ env.DISKUV_OPAM_REPOSITORY }}
 
-      # version pins
-      - name: Pins for packages to work on all OSes including Windows
-        run: |
-          opamrun pin add --yes --no-action -k version alcotest ${{ env.PIN_ALCOTEST }}
+      # This section is for your own build logic which you should place in
+      # ci/build-test.sh or a similar file
 
-      # BOILERPLATE START: setup-dkml
-      - name: Package up the installer
-        # Because of the error on manylinux2014 (CentOS 7):
-        #   No solution found, exiting
-        #   - conf-pkg-config
-        #   depends on the unavailable system package 'pkgconfig'.
-        # we use `--no-depexts`. The dockcross manylinux2014 has package names
-        # pkgconfig.i686 and pkgconfig.x86_64, it does not seem to match what
-        # opam 2.1.0 is looking for ("pkgconfig").
-        # `conf-pkg-config` is needed by `dkml-component-staging-unixutils` ->
-        # `digestif`
-        run: |
-          #!/bin/sh
-          set -euf
+      - name: Build and test on Windows host
+        if: startsWith(matrix.dkml_host_abi, 'windows_')
+        shell: msys2 {0}
+        env:
+          # [bits] is not populated by .ci/dkml-compilers pre actions
+          bits: ${{ matrix.bits }}
+        run: ci/build-test.sh
 
-          opamrun update
+      - name: Build and test on non-Windows host
+        if: "!startsWith(matrix.dkml_host_abi, 'windows_')"
+        env:
+          # [bits] is not populated by .ci/dkml-compilers pre actions
+          bits: ${{ matrix.bits }}
+        run: sh ci/build-test.sh
 
-          case "${{ matrix.dkml-host-abi }}" in
-            linux_*) opamrun install ./${OPAM_PACKAGE}.opam --with-test --yes --no-depexts ;;
-            *) opamrun install ./${OPAM_PACKAGE}.opam --with-test --yes ;;
-          esac
-
-          # Examine the installer
-          _share=$(opamrun var ${OPAM_PACKAGE}:share)
-          opamrun install diskuvbox --yes
-          opamrun exec -- diskuvbox tree -d 6 --encoding UTF-8 "$_share"
-
-          # Finalize and distribute the Console installer (each type of installer has its unique finalization procedure)
-          install -d dist
-          case "${{ matrix.dkml-host-abi }}" in
-            linux_*)
-              opamrun exec -- "$_share"/t/bundle-${PROGRAM_NAME_KEBAB}-"${{ matrix.dkml-host-abi }}"-i.sh -o dist -e .tar.gz tar --gzip
-              opamrun exec -- "$_share"/t/bundle-${PROGRAM_NAME_KEBAB}-"${{ matrix.dkml-host-abi }}"-u.sh -o dist -e .tar.gz tar --gzip
-              ;;
-            darwin*)
-              opamrun exec -- "$_share"/t/bundle-${PROGRAM_NAME_KEBAB}-"${{ matrix.dkml-host-abi }}"-i.sh -o dist -e .tar.gz -t bsd tar --gzip
-              opamrun exec -- "$_share"/t/bundle-${PROGRAM_NAME_KEBAB}-"${{ matrix.dkml-host-abi }}"-i.sh -o dist -e .tar.gz -t bsd tar --gzip
-              ;;
-            windows_*)
-              opamrun exec -- find "$_share"/t -maxdepth 1 -name "unsigned-${PROGRAM_NAME_KEBAB}-${{ matrix.dkml-host-abi }}-i-*.exe" -exec install {} dist/ \;
-              opamrun exec -- find "$_share"/t -maxdepth 1 -name "unsigned-${PROGRAM_NAME_KEBAB}-${{ matrix.dkml-host-abi }}-u-*.exe" -exec install {} dist/ \;
-              opamrun exec -- find "$_share"/t -maxdepth 1 -name "${PROGRAM_NAME_KEBAB}-${{ matrix.dkml-host-abi }}-i-*.sfx" -exec install {} dist/ \;
-              opamrun exec -- find "$_share"/t -maxdepth 1 -name "${PROGRAM_NAME_KEBAB}-${{ matrix.dkml-host-abi }}-u-*.sfx" -exec install {} dist/ \;
-              ;;
-          esac
+      # Upload
 
       - uses: actions/upload-artifact@v3
         with:
-          name: ${{ matrix.dkml-host-abi }}
+          name: ${{ matrix.dkml_host_abi }}
           path: dist/
-      # BOILERPLATE END: setup-dkml
+
+      # The .ci/dkml-compilers "post" actions will finalize caching, etc.
+
+      - name: Teardown DkML compilers on a Windows host
+        if: startsWith(matrix.dkml_host_abi, 'windows_')
+        uses: ./.ci/dkml-compilers/gh-windows/post
+
+      - name: Teardown DkML compilers on a Darwin host
+        if: startsWith(matrix.dkml_host_abi, 'darwin_')
+        uses: ./.ci/dkml-compilers/gh-darwin/post
+
+      - name: Teardown DkML compilers on a Linux host
+        if: startsWith(matrix.dkml_host_abi, 'linux_')
+        uses: ./.ci/dkml-compilers/gh-linux/post
 
   #--------
   # Testing
@@ -306,8 +233,9 @@ jobs:
   #   Mitigation: Pre-install Git for Windows from Chocolatey. Also Vagrant still
   #   tests the Git installer successfully.
   direct-testing:
-    # Disabled until "Tricky Issues" is fixed
-    if: false
+    continue-on-error: true
+    # WAS: Disabled until "Tricky Issues" is fixed
+    # if: false
     # if: |
     #   github.event.inputs.test-filter != 'no-tests' &&
     #   github.event.inputs.test-filter != 'no-direct-tests' &&
@@ -322,18 +250,18 @@ jobs:
       matrix:
         include:
           - os: windows-2019
-            dkml-host-abi: windows_x86
+            dkml_host_abi: windows_x86
           - os: windows-latest
-            dkml-host-abi: windows_x86_64
+            dkml_host_abi: windows_x86_64
 
     runs-on: ${{ matrix.os }}
-    name: direct / ${{ matrix.os }} ${{ matrix.dkml-host-abi }}
+    name: direct / ${{ matrix.os }} ${{ matrix.dkml_host_abi }}
 
     steps:
-      - name: Download and unpack ${{ matrix.dkml-host-abi }} artifact
+      - name: Download and unpack ${{ matrix.dkml_host_abi }} artifact
         uses: actions/download-artifact@v3
         with:
-          name: ${{ matrix.dkml-host-abi }}
+          name: ${{ matrix.dkml_host_abi }}
           path: dist
 
       - name: Test the installer (Windows)
