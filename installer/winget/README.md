@@ -21,7 +21,7 @@ winget install wingetcreate
 #   2.2.0-beta2-20240409
 #   2.2.0-beta2
 $SemVer = $(Select-String -Path dune-project -Pattern "(version " -SimpleMatch | Select-Object -First 1).Line -replace "\(","" -replace "\)","" -replace "~","-" -split " " | Select-Object -Index 1
-$ARPVer = $SemVer -split "-" | Select-Object -First 2 | Join-String -Separator "-"
+$ARPVer = ($SemVer -split "-" | Select-Object -First 2) -Join "-"
 
 wingetcreate.exe update --urls "https://github.com/diskuv/dkml-installer-opam/releases/download/$SemVer/unsigned-opam-windows_x86-i-$SemVer.exe|x86|user" "https://github.com/diskuv/dkml-installer-opam/releases/download/$SemVer/unsigned-opam-windows_x86_64-i-$SemVer.exe|x64|user" --version "$ARPVer" --out installer/winget Diskuv.opam
 
@@ -38,7 +38,7 @@ SECOND, review the changes with `git diff`. *If you need modifications, you'll h
 THIRD, do the submission:
 
 ```powershell
-wingetcreate.exe update --urls "https://github.com/diskuv/dkml-installer-opam/releases/download/$SemVer/unsigned-opam-windows_x86-i-$SemVer.exe|x86|user" "https://github.com/diskuv/dkml-installer-opam/releases/download/$SemVer/unsigned-opam-windows_x86_64-i-$SemVer.exe|x64|user" --version "$ARPVer" --submit
+wingetcreate.exe update --urls "https://github.com/diskuv/dkml-installer-opam/releases/download/$SemVer/unsigned-opam-windows_x86-i-$SemVer.exe|x86|user" "https://github.com/diskuv/dkml-installer-opam/releases/download/$SemVer/unsigned-opam-windows_x86_64-i-$SemVer.exe|x64|user" --version "$ARPVer" --submit Diskuv.opam
 ```
 
 ## Alternate - Manual Submission
@@ -120,7 +120,7 @@ winget install --manifest installer/winget/manifest
 
 > Never use Windows Sandbox as your final test before releasing to end-users.
 > Instead run the installer on your own machine.
-> 
+>
 > And if you don't want to install it on your local machine:
 > why would you be comfortable asking other Windows users to install it?
 
