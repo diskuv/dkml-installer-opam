@@ -57,7 +57,8 @@ as well to provide the missing pieces.
 
    and wait for GitHub Actions to complete successfully.
 8. In the `installer/winget/manifest` directory search for all `# BUMP` in the `.yaml` files and edit each line.
-9. Do the [winget Testing instructions](installer/winget/README.md#testing).
+   - The `PackageVersion` in all `.yaml` files should be set to the ARP version that has **no date** (you set this in Step 5).
+9.  Do the [winget Testing instructions](installer/winget/README.md#testing).
 10. Do the following in `dkml-installer-opam/`:
 
    ```sh
