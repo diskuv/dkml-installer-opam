@@ -13,7 +13,7 @@ install: [
     "--program-version"
     #   The program version appears in filenames.
     #   Use hyphenated version like 2.2.0-beta2-20240409 not 2.2.0~beta2~20240409.
-    "2.2.0-alpha0-20221228"
+    "2.2.0-beta2-20240409"
     "--component"
     "offline-opam"
 
