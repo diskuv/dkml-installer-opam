@@ -103,6 +103,9 @@ opamrun update
 for pkg in dkml-component-common-opam dkml-component-staging-opam32 dkml-component-staging-opam64 dkml-component-offline-opam ; do
     opamrun pin "$pkg.$opam_version" "git+https://github.com/diskuv/dkml-component-opam.git#$tag_version" --no-action --yes
 done
+#   For some reason Jane Street removed the `available: arch != "arm32" & arch != "x86_32"`
+#   restriction in v0.16.0, and then put it back in in v0.16.1.
+opamrun pin -k version ppx_inline_test v0.16.0 --no-action --yes
 
 # Install
 # -------
