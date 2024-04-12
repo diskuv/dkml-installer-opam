@@ -1,9 +1,5 @@
 # Created using wingetcreate 1.1.2.0
 # yaml-language-server: $schema=https://aka.ms/winget-manifest.installer.1.2.0.schema.json
-# Follow:
-#   https://docs.microsoft.com/en-us/windows/package-manager/package/manifest?tabs=minschema%2Cversion-example#tips-and-best-practices
-#   https://github.com/microsoft/winget-pkgs/tree/master/doc/manifest/schema/1.2.0#best-practices
-# Reference: https://github.com/microsoft/winget-pkgs/blob/master/doc/manifest/schema/1.2.0/installer.md
 PackageIdentifier: Diskuv.opam
 PackageVersion: 2.2.0-beta2 # BUMP
 # Scope: user

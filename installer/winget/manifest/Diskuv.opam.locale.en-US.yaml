@@ -4,9 +4,6 @@
 PackageIdentifier: Diskuv.opam
 PackageVersion: 2.2.0-beta2 # BUMP
 PackageLocale: en-US
-#   Publisher
-#     Keep in sync with installer\src\private_common.ml "organization" which is used by
-#     https://github.com/diskuv/dkml-install-api/blob/main/package/console/common/Windows_registry.ml
 Publisher: Diskuv, Inc.
 PublisherUrl: https://www.diskuv.com/
 PrivacyUrl: https://diskuv.com/legal#privacy_policy
