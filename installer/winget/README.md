@@ -1,7 +1,7 @@
 # winget
 
 The files in the `manifest/` directory are published to Microsoft. See
-[Authoring Manifest](https://github.com/microsoft/winget-pkgs/blob/master/AUTHORING_MANIFESTS.md)
+[Authoring a Manifest](https://github.com/microsoft/winget-pkgs/blob/master/doc/README.md#authoring-a-manifest)
 for more details.
 
 ## Upgrading
