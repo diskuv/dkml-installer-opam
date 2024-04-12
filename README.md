@@ -11,9 +11,67 @@ as well to provide the missing pieces.
 
 ## Making a new version
 
-1. Follow [dkml-component-opam's "Making a new version"](https://github.com/diskuv/dkml-component-opam?tab=readme-ov-file#making-a-new-version)
-2. Edit the `(version ...)` in [dune-project](./dune-project). Use the same version as you used in `dkml-component-opam`.
-3. Edit the `pin-depends` section of [dkml-installer-offline-opam.opam.template](./dkml-installer-offline-opam.opam.template).
+> The following assumes you have a Unix shell. On Windows with DkML installed you can use `with-dkml bash` to get one.
+
+> We won't be using code-signing for this section, although that is documented in [BINARY_SIGNING.md](contributors/BINARY_SIGNING.md).
+
+1. Ensure you have cloned https://github.com/diskuv/dkml-component-opam.git in a sibling directory to this `dkml-installer-opam/` project. So your directory structure should look like:
+   ```
+
+    ├── dkml-component-opam
+    │   ├── ...
+    │   └── dune-project
+    ├── dkml-installer-opam
+        ├── ...
+        └── dune-project
+   ```
+2. Follow [dkml-component-opam's "Making a new version"](https://github.com/diskuv/dkml-component-opam?tab=readme-ov-file#making-a-new-version)
+3. Edit the `(version ...)` in [dune-project](./dune-project). Use the same version as you used in `dkml-component-opam`.
+4. Edit the `--program-version` in [dkml-installer-offline-opam.opam.template](./dkml-installer-offline-opam.opam.template). Use the hyphenated version, not the opam version. So replace `~` with `-`.
+5. Edit the `arp_version` in [version.ml](installer/src/version.ml). It should be the hyphenated version **and should not include the date** since this is highly visible to the user. So `2.2.0-beta2` not `2.2.0-beta2-20240409` if you are publishing a beta release. **It is not recommended to publish a beta release to winget; all new users would get the beta version**.
+6. Do the following in `dkml-installer-opam/`:
+
+   ```sh
+   eval $(opam env --switch ../dkml-component-opam --set-switch)
+
+   opam exec -- dune build *.opam
+   opam exec -- dune runtest
+   git add dune-project *.opam dkml-installer-offline-opam.opam.template installer/src/version.ml
+   git commit -m "Prepare new version (1/2)"
+
+   opam remove dkml-installer-offline-opam -y
+   opam install ./dkml-installer-offline-opam.opam --keep-build-dir
+
+   # See the OS-specific installer or installer generator script.
+   # macOS ARM64 is not part of DkML opam distribution.
+   find "$(opam var dkml-installer-offline-opam:share)/t"
+   ```
+7. Do:
+
+   ```sh
+   # 2.2.0~beta2~20240409 is tagged as 2.2.0-beta2-20240409
+   tagversion=$(awk '/\(version / { sub(/)/, ""); gsub(/~/, "-"); print $2 }' dune-project)
+   git tag "$tagversion"
+   git push origin "$tagversion"
+   ```
+
+   and wait for GitHub Actions to complete successfully.
+8. In the `installer/winget/manifest` directory search for all `# BUMP` in the `.yaml` files and edit each line.
+9. Do the [winget Testing instructions](installer/winget/README.md#testing).
+10. Do the following in `dkml-installer-opam/`:
+
+   ```sh
+   git add installer/winget/manifest
+   git commit -m "Prepare new version (2/2)"
+
+   tagversion=$(awk '/\(version / { sub(/)/, ""); gsub(/~/, "-"); print $2 }' dune-project)
+   git tag "$tagversion+winget"
+   git push origin "$tagversion+winget"
+   ```
+11. Do the [winget Submitting instructions](installer/winget/README.md#submitting).
+
+> See the suggestions in https://github.com/diskuv/dkml-installer-opam/issues/1 for automating these
+> steps.
 
 ## (Pending) Developing
 
@@ -74,7 +132,7 @@ In addition, there are
 
 * [code signing documents](contributors/BINARY_SIGNING.md)
 * [winget package submission documents](installer/winget/README.md)
- 
+
 ## Status
 
 | What                   | Branch/Tag | Status                                                                                                                                                                                          |
