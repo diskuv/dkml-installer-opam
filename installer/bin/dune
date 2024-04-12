@@ -1,44 +1,77 @@
-; warnings should be non-FATAL, especially the cmdliner deprecation warnings
-(env
-  (_
-    (flags (:standard -warn-error -A))))
-
 (rule
  (targets
-  create_installers.ml
   discover.ml
   entry_assembly_manifest.ml
-  entry_install.ml
-  entry_uninstall.ml
-  entry-application.manifest
-  package_setup.ml
-  package_uninstaller.ml
-  runner_admin.ml
-  runner_user.ml)
+  entry-application.manifest)
  (action
   (progn
-   (run ml-of-installer-generator))))
+   (run common-ml-of-installer-generator))))
 
 (rule
- (target dune.inc)
+ (alias gen-dkml)
+ (target dune-common.gen.inc)
  (deps
-  create_installers.ml
   discover.ml
   entry_assembly_manifest.ml
-  entry_install.ml
-  entry_uninstall.ml
-  entry-application.manifest
-  package_setup.ml
-  package_uninstaller.ml
-  runner_admin.ml
-  runner_user.ml)
- (mode promote)
+  entry-application.manifest)
  (action
   (progn
    (run
-    dune-of-installer-generator
+    common-dune-of-installer-generator
     --project-root
     %{project_root}
     %{target}))))
+
+(rule
+  (alias gen-dkml)
+  (action
+    (diff dune-common.inc dune-common.gen.inc)))
+
+(include dune-common.inc)
+
+(rule
+ (deps (universe)) ; package-ml-of-installer-generator queries `findlib` in the installed universe
+ (targets
+  create_installers.ml
+  entry_install.ml
+  entry_uninstall.ml
+  package_setup.ml
+  package_uninstaller.ml
+  runner_admin.ml
+  runner_user.ml)
+ (action
+  (progn
+   (run package-ml-of-installer-generator %{read-strings:components.strings}))))
+
+(rule
+ (alias gen-dkml)
+ (target dune.gen.inc)
+ (deps
+  (universe) ; package-dune-of-installer-generator queries `findlib` in the installed universe
+  create_installers.ml
+  discover.ml
+  entry_assembly_manifest.ml
+  entry_install.ml
+  entry_uninstall.ml
+  entry-application.manifest
+  package_setup.ml
+  package_uninstaller.ml
+  runner_admin.ml
+  runner_user.ml)
+ (action
+  (progn
+   (run
+    package-dune-of-installer-generator
+    --package-name
+    dkml-installer-ocaml-network
+    --project-root
+    %{project_root}
+    %{target}
+    %{read-strings:components.strings}))))
+
+(rule
+  (alias gen-dkml)
+  (action
+    (diff dune.inc dune.gen.inc)))
 
 (include dune.inc)
