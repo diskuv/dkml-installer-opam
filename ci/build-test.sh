@@ -47,6 +47,10 @@ fi
 OPAM_PACKAGE=dkml-installer-offline-opam
 PROGRAM_NAME_KEBAB=opam
 
+# Derivatives
+opam_version=$(awk '/\(version / { sub(/)/, ""); print $2 }' dune-project)
+tag_version=$(awk '/\(version / { sub(/)/, ""); gsub(/~/, "-"); print $2 }' dune-project)
+
 # shellcheck disable=SC2154
 echo "
 =============
@@ -73,6 +77,12 @@ Constants
 OPAM_PACKAGE=$OPAM_PACKAGE
 PROGRAM_NAME_KEBAB=$PROGRAM_NAME_KEBAB
 .
+-----------
+Derivatives
+-----------
+opam_version=$opam_version
+tag_version=$tag_version
+.
 "
 
 # PATH. Add opamrun
@@ -89,8 +99,13 @@ opamrun exec -- ocamlc -config
 # Update
 opamrun update
 
-# Dev notes
-# ---------
+# Pin
+for pkg in dkml-component-common-opam dkml-component-staging-opam32 dkml-component-staging-opam64 dkml-component-offline-opam ; do
+    opamrun pin "$pkg.$opam_version" "git+https://github.com/diskuv/dkml-component-opam.git#$tag_version" --no-action --yes
+done
+
+# Install
+# -------
 #
 # Because of the error on manylinux2014 (CentOS 7):
 #   No solution found, exiting
@@ -101,8 +116,6 @@ opamrun update
 # opam 2.1.0 is looking for ("pkgconfig").
 # `conf-pkg-config` is needed by `dkml-component-staging-unixutils` ->
 # `digestif`
-
-# Install
 case "$dkml_host_abi" in
 linux_*) opamrun install ./${OPAM_PACKAGE}.opam --with-test --yes --no-depexts ;;
 *) opamrun install ./${OPAM_PACKAGE}.opam --with-test --yes ;;
