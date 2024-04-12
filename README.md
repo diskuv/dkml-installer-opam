@@ -12,11 +12,12 @@ as well to provide the missing pieces.
 ## Making a new version
 
 > The following assumes you have a Unix shell. On Windows with DkML installed you can use `with-dkml bash` to get one.
-
+>
 > We won't be using code-signing for this section, although that is documented in [BINARY_SIGNING.md](contributors/BINARY_SIGNING.md).
 
-1. Ensure you have cloned https://github.com/diskuv/dkml-component-opam.git in a sibling directory to this `dkml-installer-opam/` project. So your directory structure should look like:
-   ```
+1. Ensure you have cloned <https://github.com/diskuv/dkml-component-opam.git> in a sibling directory to this `dkml-installer-opam/` project. So your directory structure should look like:
+
+   ```text
 
     ├── dkml-component-opam
     │   ├── ...
@@ -25,6 +26,7 @@ as well to provide the missing pieces.
         ├── ...
         └── dune-project
    ```
+
 2. Follow [dkml-component-opam's "Making a new version"](https://github.com/diskuv/dkml-component-opam?tab=readme-ov-file#making-a-new-version)
 3. Edit the `(version ...)` in [dune-project](./dune-project). Use the same version as you used in `dkml-component-opam`.
 4. Edit the `--program-version` in [dkml-installer-offline-opam.opam.template](./dkml-installer-offline-opam.opam.template). Use the hyphenated version, not the opam version. So replace `~` with `-`.
@@ -46,6 +48,7 @@ as well to provide the missing pieces.
    # macOS ARM64 is not part of DkML opam distribution.
    find "$(opam var dkml-installer-offline-opam:share)/t"
    ```
+
 7. Do:
 
    ```sh
@@ -58,20 +61,21 @@ as well to provide the missing pieces.
    and wait for GitHub Actions to complete successfully.
 8. In the `installer/winget/manifest` directory search for all `# BUMP` in the `.yaml` files and edit each line.
    - The `PackageVersion` in all `.yaml` files should be set to the ARP version that has **no date** (you set this in Step 5).
-9.  Do the [winget Testing instructions](installer/winget/README.md#testing).
+9. Do the [winget Testing instructions](installer/winget/README.md#testing).
 10. Do the following in `dkml-installer-opam/`:
 
-   ```sh
-   git add installer/winget/manifest
-   git commit -m "Prepare new version (2/2)"
+    ```sh
+    git add installer/winget/manifest
+    git commit -m "Prepare new version (2/2)"
 
-   tagversion=$(awk '/\(version / { sub(/)/, ""); gsub(/~/, "-"); print $2 }' dune-project)
-   git tag "$tagversion+winget"
-   git push origin "$tagversion+winget"
-   ```
+    tagversion=$(awk '/\(version / { sub(/)/, ""); gsub(/~/, "-"); print $2 }' dune-project)
+    git tag "$tagversion+winget"
+    git push origin "$tagversion+winget"
+    ```
+
 11. Do the [winget Submitting instructions](installer/winget/README.md#submitting).
 
-> See the suggestions in https://github.com/diskuv/dkml-installer-opam/issues/1 for automating these
+> See the suggestions in <https://github.com/diskuv/dkml-installer-opam/issues/1> for automating these
 > steps.
 
 ## (Pending) Developing
@@ -131,8 +135,8 @@ component that you would like to get distributed.
 
 In addition, there are
 
-* [code signing documents](contributors/BINARY_SIGNING.md)
-* [winget package submission documents](installer/winget/README.md)
+- [code signing documents](contributors/BINARY_SIGNING.md)
+- [winget package submission documents](installer/winget/README.md)
 
 ## Status
 
