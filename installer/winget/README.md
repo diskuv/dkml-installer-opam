@@ -12,7 +12,38 @@ Then search for `# BUMP` in the `.yaml` files and edit each line.
 
 ## Submitting
 
-FIRST, go to https://github.com/microsoft/winget-pkgs and press the Fork
+FIRST, in PowerShell upgrade and update the files in [manifest](manifest/) using the `wingetcreate` tool:
+
+```powershell
+winget install wingetcreate
+
+# (version 2.2.0~beta2~20240409) in dune-project converts to:
+#   2.2.0-beta2-20240409
+#   2.2.0-beta2
+$SemVer = $(Select-String -Path dune-project -Pattern "(version " -SimpleMatch | Select-Object -First 1).Line -replace "\(","" -replace "\)","" -replace "~","-" -split " " | Select-Object -Index 1
+$ARPVer = $SemVer -split "-" | Select-Object -First 2 | Join-String -Separator "-"
+
+wingetcreate.exe update --urls "https://github.com/diskuv/dkml-installer-opam/releases/download/$SemVer/unsigned-opam-windows_x86-i-$SemVer.exe|x86|user" "https://github.com/diskuv/dkml-installer-opam/releases/download/$SemVer/unsigned-opam-windows_x86_64-i-$SemVer.exe|x64|user" --version "$ARPVer" --out installer/winget Diskuv.opam
+
+foreach ($yamlfile in "Diskuv.opam.yaml","Diskuv.opam.locale.en-US.yaml","Diskuv.opam.installer.yaml")
+{
+  Copy-Item "installer\winget\manifests\d\Diskuv\opam\$ARPVer\$yamlfile" "installer\winget\manifest\$yamlfile"
+}
+
+Remove-Item -Force -Recurse installer\winget\manifests
+```
+
+SECOND, review the changes with `git diff`. *If you need modifications, you'll have to use the [manual submission](#alternate---manual-submission) method.*
+
+THIRD, do the submission:
+
+```powershell
+wingetcreate.exe update --urls "https://github.com/diskuv/dkml-installer-opam/releases/download/$SemVer/unsigned-opam-windows_x86-i-$SemVer.exe|x86|user" "https://github.com/diskuv/dkml-installer-opam/releases/download/$SemVer/unsigned-opam-windows_x86_64-i-$SemVer.exe|x64|user" --version "$ARPVer" --submit
+```
+
+## Alternate - Manual Submission
+
+FIRST, go to <https://github.com/microsoft/winget-pkgs> and press the Fork
 button. You will create a fork in your personal GitHub account.
 
 SECOND, in the `dkml-installer-opam` directory use PowerShell to run:
