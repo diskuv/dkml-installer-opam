@@ -294,6 +294,9 @@ jobs:
             & "$env:LOCALAPPDATA\Programs\opam\bin\opam.exe" --version
             if ($LastExitCode -ne 0) { throw "opam.exe --version failed! Exited with $LastExitCode" }
 
+            & "$env:LOCALAPPDATA\Programs\opam\bin\opam.exe" init -a --no-git-location --cygwin-internal-install windows-initial https://github.com/dra27/opam-repository.git#windows-initial
+            if ($LastExitCode -ne 0) { throw "opam.exe init failed! Exited with $LastExitCode" }
+
             & "$env:LOCALAPPDATA\Programs\opam\bin\opam.exe" var
             if ($LastExitCode -ne 0) { throw "opam.exe var failed! Exited with $LastExitCode" }
           }
