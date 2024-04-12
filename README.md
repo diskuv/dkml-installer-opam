@@ -1,4 +1,4 @@
-# DKML installer for Opam
+# DkML installer for Opam
 
 An installer for Opam.
 
@@ -8,6 +8,12 @@ package, for example, requires a POSIX shell from MSYS2 or Cygwin.
 
 For 2022 and 2023 you should expect to need the `dkml-installer-ocaml` installer
 as well to provide the missing pieces.
+
+## Making a new version
+
+1. Follow [dkml-component-opam's "Making a new version"](https://github.com/diskuv/dkml-component-opam?tab=readme-ov-file#making-a-new-version)
+2. Edit the `(version ...)` in [dune-project](./dune-project). Use the same version as you used in `dkml-component-opam`.
+3. Edit the `pin-depends` section of [dkml-installer-offline-opam.opam.template](./dkml-installer-offline-opam.opam.template).
 
 ## (Pending) Developing
 
