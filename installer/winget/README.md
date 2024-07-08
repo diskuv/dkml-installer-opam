@@ -37,7 +37,7 @@ SECOND, do the [Windows Sandbox testing](#windows-sandbox-testing).
 
 THIRD, do the [Actual Testing](#actual-testing).
 
-FOURTH, review the changes with `git diff`. *If you need modifications, you'll have to use the [manual submission](#alternate---manual-submission) method.*
+FOURTH, review the changes with `git diff` and then do a `git commit`. *If you need modifications, you'll have to use the [manual submission](#alternate---manual-submission) method.*
 
 FIFTH, do the submission:
 
@@ -169,4 +169,16 @@ Test a change with:
 
 ```powershell
 winget install --manifest installer/winget/manifest
+```
+
+and to ensure `Microsoft Defender SmartScreen` gets its first look at the 32-bit installer test the 32-bit installer with:
+
+```powershell
+winget install --manifest installer/winget/manifest --architecture X86
+```
+
+You can uninstall it after testing with:
+
+```powershell
+winget uninstall opam
 ```
