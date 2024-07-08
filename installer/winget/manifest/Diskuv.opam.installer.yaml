@@ -2,7 +2,7 @@
 # yaml-language-server: $schema=https://aka.ms/winget-manifest.installer.1.6.0.schema.json
 
 PackageIdentifier: Diskuv.opam
-PackageVersion: 2.2.0-beta3
+PackageVersion: 2.2.0
 Platform:
 - Windows.Desktop
 MinimumOSVersion: 10.0.18362.0
@@ -22,14 +22,14 @@ Commands:
 - opam-putenv
 Installers:
 - Architecture: x86
-  InstallerUrl: https://github.com/diskuv/dkml-installer-opam/releases/download/2.2.0-beta3-20240611/unsigned-opam-windows_x86-i-2.2.0-beta3-20240611.exe
-  InstallerSha256: 048F4EBA5C657E9571EA82C53C64726D64801B5B630E54E1F00ECA126730133C
+  InstallerUrl: https://github.com/diskuv/dkml-installer-opam/releases/download/2.2.0/unsigned-opam-windows_x86-i-2.2.0.exe
+  InstallerSha256: A5CD7219F7EED60E3A98B6A45CE6CE5AA6D47C3038325E2450EED1E859EB59AF
   Dependencies:
     PackageDependencies:
     - PackageIdentifier: Microsoft.VCRedist.2015+.x86
 - Architecture: x64
-  InstallerUrl: https://github.com/diskuv/dkml-installer-opam/releases/download/2.2.0-beta3-20240611/unsigned-opam-windows_x86_64-i-2.2.0-beta3-20240611.exe
-  InstallerSha256: BB8FFD1D2315E932E628ADBABDCB7C31F09C8B5C64B55DB6E2B65D5515C8146D
+  InstallerUrl: https://github.com/diskuv/dkml-installer-opam/releases/download/2.2.0/unsigned-opam-windows_x86_64-i-2.2.0.exe
+  InstallerSha256: E2AD8E10E636C81B415A4FE7C7ABF2E4AC8F124013947DF2AD2B0AFF5EC166FD
   Dependencies:
     PackageDependencies:
     - PackageIdentifier: Microsoft.VCRedist.2015+.x64
