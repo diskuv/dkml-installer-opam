@@ -33,9 +33,13 @@ foreach ($yamlfile in "Diskuv.opam.yaml","Diskuv.opam.locale.en-US.yaml","Diskuv
 Remove-Item -Force -Recurse installer\winget\manifests
 ```
 
-SECOND, review the changes with `git diff`. *If you need modifications, you'll have to use the [manual submission](#alternate---manual-submission) method.*
+SECOND, do the [Windows Sandbox testing](#windows-sandbox-testing).
 
-THIRD, do the submission:
+THIRD, do the [Actual Testing](#actual-testing).
+
+FOURTH, review the changes with `git diff`. *If you need modifications, you'll have to use the [manual submission](#alternate---manual-submission) method.*
+
+FIFTH, do the submission:
 
 ```powershell
 wingetcreate.exe update --urls "https://github.com/diskuv/dkml-installer-opam/releases/download/$SemVer/unsigned-opam-windows_x86-i-$SemVer.exe|x86|user" "https://github.com/diskuv/dkml-installer-opam/releases/download/$SemVer/unsigned-opam-windows_x86_64-i-$SemVer.exe|x64|user" --version "$ARPVer" --submit Diskuv.opam
@@ -102,21 +106,7 @@ to avoid the errors:
 >
 > Windows Sandbox does not seem to be available.
 
-### Actual Testing
-
-Validate any changes with:
-
-```powershell
-winget validate --manifest installer/winget/manifest
-```
-
-Test a change with:
-
-```powershell
-winget install --manifest installer/winget/manifest
-```
-
-### Troubleshooting with Windows Sandbox
+### Windows Sandbox Testing
 
 > Never use Windows Sandbox as your final test before releasing to end-users.
 > Instead run the installer on your own machine.
@@ -124,8 +114,8 @@ winget install --manifest installer/winget/manifest
 > And if you don't want to install it on your local machine:
 > why would you be comfortable asking other Windows users to install it?
 
-The instructions below are from https://github.com/microsoft/winget-pkgs and
-include some suggestions from https://github.com/microsoft/winget-pkgs/pull/69112:
+The instructions below are from <https://github.com/microsoft/winget-pkgs> and
+include some suggestions from <https://github.com/microsoft/winget-pkgs/pull/69112>:
 
 FIRST clone the `winget-pkgs` repository alongside the `dkml-installer-opam`
 directory with:
@@ -165,4 +155,18 @@ if (($env:USERNAME -eq "WDAGUtilityAccount") -or ($PWD.Path -eq "C:\Users\WDAGUt
 
 # Rerun the installer; if you are prompted for security now you'll be able to click through it
 winget install --manifest ..\SandboxTest\manifest
+```
+
+### Actual Testing
+
+Validate any changes with:
+
+```powershell
+winget validate --manifest installer/winget/manifest
+```
+
+Test a change with:
+
+```powershell
+winget install --manifest installer/winget/manifest
 ```
