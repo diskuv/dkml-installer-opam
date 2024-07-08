@@ -25,7 +25,7 @@ https://shop.identiv.com/collections/fido2-security-keys/products/utrust-fido2-n
 
 #### Saving private key in device
 
-FIRST, download and install [IDENTIV - uTrust Key Manager Software](https://go.identiv.com/software/utrust-key-manager)
+FIRST, download and install [IDENTIV - uTrust Key Manager Software](https://www.identiv.com/products/logical-access-control/utrust-fido2-security-keys/utrust-key-manager-software)
 
 SECOND, in a UNIX shell run:
 
